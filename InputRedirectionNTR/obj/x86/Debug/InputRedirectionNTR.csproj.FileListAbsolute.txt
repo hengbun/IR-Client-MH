@@ -1,0 +1,15 @@
+C:\Users\Rumah\Desktop\InputRedirectionClient-NTR\InputRedirectionNTR\bin\WindowsGL\Debug\Content\Background\Background.bmp
+C:\Users\Rumah\Desktop\InputRedirectionClient-NTR\InputRedirectionNTR\bin\WindowsGL\Debug\Content\Cursors\Cursor.png
+C:\Users\Rumah\Desktop\InputRedirectionClient-NTR\InputRedirectionNTR\bin\WindowsGL\Debug\Content\Fonts\NESFont.png
+C:\Users\Rumah\Desktop\InputRedirectionClient-NTR\InputRedirectionNTR\bin\WindowsGL\Debug\InputRedirectionNTR.exe.config
+C:\Users\Rumah\Desktop\InputRedirectionClient-NTR\InputRedirectionNTR\bin\WindowsGL\Debug\InputRedirectionNTR.exe.manifest
+C:\Users\Rumah\Desktop\InputRedirectionClient-NTR\InputRedirectionNTR\bin\WindowsGL\Debug\InputRedirectionNTR.application
+C:\Users\Rumah\Desktop\InputRedirectionClient-NTR\InputRedirectionNTR\bin\WindowsGL\Debug\InputRedirectionNTR.exe
+C:\Users\Rumah\Desktop\InputRedirectionClient-NTR\InputRedirectionNTR\bin\WindowsGL\Debug\InputRedirectionNTR.pdb
+C:\Users\Rumah\Desktop\InputRedirectionClient-NTR\InputRedirectionNTR\bin\WindowsGL\Debug\MonoGame.Framework.dll
+C:\Users\Rumah\Desktop\InputRedirectionClient-NTR\InputRedirectionNTR\bin\WindowsGL\Debug\OpenTK.dll
+C:\Users\Rumah\Desktop\InputRedirectionClient-NTR\InputRedirectionNTR\bin\WindowsGL\Debug\NVorbis.dll
+C:\Users\Rumah\Desktop\InputRedirectionClient-NTR\InputRedirectionNTR\obj\x86\Debug\InputRedirectionNTR.exe.manifest
+C:\Users\Rumah\Desktop\InputRedirectionClient-NTR\InputRedirectionNTR\obj\x86\Debug\InputRedirectionNTR.application
+C:\Users\Rumah\Desktop\InputRedirectionClient-NTR\InputRedirectionNTR\obj\x86\Debug\InputRedirectionNTR.exe
+C:\Users\Rumah\Desktop\InputRedirectionClient-NTR\InputRedirectionNTR\obj\x86\Debug\InputRedirectionNTR.pdb
