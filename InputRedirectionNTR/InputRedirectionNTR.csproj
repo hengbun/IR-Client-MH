@@ -6,7 +6,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{476F5922-9EAA-4762-934B-B2B4BA327445}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>InputRedirectionNTR</RootNamespace>
     <AssemblyName>InputRedirectionNTR</AssemblyName>
