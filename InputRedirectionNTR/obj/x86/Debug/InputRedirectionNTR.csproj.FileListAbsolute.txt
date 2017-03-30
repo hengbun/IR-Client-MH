@@ -13,3 +13,4 @@ C:\Users\Rumah\Desktop\InputRedirectionClient-NTR\InputRedirectionNTR\obj\x86\De
 C:\Users\Rumah\Desktop\InputRedirectionClient-NTR\InputRedirectionNTR\obj\x86\Debug\InputRedirectionNTR.application
 C:\Users\Rumah\Desktop\InputRedirectionClient-NTR\InputRedirectionNTR\obj\x86\Debug\InputRedirectionNTR.exe
 C:\Users\Rumah\Desktop\InputRedirectionClient-NTR\InputRedirectionNTR\obj\x86\Debug\InputRedirectionNTR.pdb
+C:\Users\Rumah\Desktop\InputRedirectionClient-NTR\InputRedirectionNTR\obj\x86\Debug\InputRedirectionNTR.csprojResolveAssemblyReference.cache

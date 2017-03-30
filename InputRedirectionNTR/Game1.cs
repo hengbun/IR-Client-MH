@@ -21,6 +21,7 @@ namespace InputRedirectionNTR
         uint newbuttons = 0xFFF;
         uint oldtouch = 0x2000000;
         uint newtouch = 0x2000000;
+        uint macrotouch = 0x2000000;
         uint oldcpad = 0x800800;
         uint newcpad = 0x800800;
         uint touchclick = 0x00;
@@ -40,6 +41,7 @@ namespace InputRedirectionNTR
         uint KeyIndex;
         Keys OldKey;
         uint OldButton;
+        uint OldMacro;
         uint seconds = 0;
         bool useGamePad = true;
         bool Rstickcam = true;
@@ -131,11 +133,25 @@ namespace InputRedirectionNTR
 
                 case 5:
                     {
+                        Console.WriteLine("Mode: " + Mode);
                         IsMouseVisible = true;
                         ReadNewButton();
                     }
                     break;
-
+                case 6:
+                    {
+                        Console.WriteLine("Mode: " + Mode);
+                        IsMouseVisible = true;
+                        ReadGamePadMacro();
+                    }
+                    break;
+                case 7:
+                    {
+                        Console.WriteLine("Mode: " + Mode);
+                        IsMouseVisible = true;
+                        ReadNewMacro();
+                    }
+                    break;
             }
 
             base.Update(gameTime);
@@ -171,6 +187,19 @@ namespace InputRedirectionNTR
                     case 5:
                         {
                             ShowGamePadInput();
+                            Console.WriteLine("Mode: " + Mode);
+                        }
+                        break;
+
+                    case 6:
+                        {
+                            ShowMacroMenu();
+                        }
+                        break;
+
+                    case 7:
+                        {
+                            ShowTouchScreenPic();
                         }
                         break;
                 }
@@ -325,7 +354,7 @@ namespace InputRedirectionNTR
             }
         }
 
-        private void ReadNewButton()
+        private void ReadNewButton() //Map New Gamepad Input from Keyboard Input Mode 5
         {
             if (!WaitForKeyUp)
             {
@@ -451,6 +480,44 @@ namespace InputRedirectionNTR
             }
         }
 
+        private void ReadNewMacro() //Map New Macro Mode 7
+        {
+            if (!WaitForKeyUp)
+            {
+                 if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+                                    {
+                                        Console.WriteLine(macrotouch);
+                                        WaitForKeyUp = true;
+                                        TouchInput(ref macrotouch, ref touchclick, false);
+                                        MacroInput[KeyIndex] = macrotouch;
+                                        Mode = 6;
+                                    }
+                 else if (Keyboard.GetState().IsKeyDown(Keys.Back))
+                                     {
+                                      if (System.Net.IPAddress.TryParse(IPAddress, out ipAddress))
+                                             {
+                                                Console.WriteLine("EscMode7");
+                                                MacroInput[KeyIndex] = OldMacro;
+                                                Mode = 6;
+                                             }
+
+                                        }
+                
+                  else
+                                      {
+                                        touchclick = 0x00;
+                                        macrotouch = 0x2000000;
+                                    }
+                                }
+            else
+            {
+                if (Keyboard.GetState().IsKeyUp(Keys.Escape))
+                {
+                    WaitForKeyUp = false;
+                }
+            }
+        }
+
         private void ReadMain()
         {
             if (!WaitForKeyUp)
@@ -462,18 +529,20 @@ namespace InputRedirectionNTR
                     Mode = 1;
                 }
 
-                if (Keyboard.GetState().IsKeyDown(Keys.F2))
+                if (Keyboard.GetState().IsKeyDown(Keys.F2))//KeyboardSetting
                 {
                     WaitForKeyUp = true;
                     UpKey = Keys.F2;
                     Mode = 2;
                 }
 
-                if (Keyboard.GetState().IsKeyDown(Keys.F3))
+                if (Keyboard.GetState().IsKeyDown(Keys.F3)) //GamePadSetting
                 {
+                    Console.WriteLine("F3 Pressed");
                     WaitForKeyUp = true;
                     UpKey = Keys.F3;
                     Mode = 3;
+                    Console.WriteLine("Mode: "+Mode);
                 }
 
                 if (Keyboard.GetState().IsKeyDown(Keys.F4))
@@ -492,12 +561,22 @@ namespace InputRedirectionNTR
                     useGamePad = !useGamePad;
                     SaveConfig();
                 }
+
                 if (Keyboard.GetState().IsKeyDown(Keys.F6))
                 {
                     WaitForKeyUp = true;
                     UpKey = Keys.F6;
                     Rstickcam = !Rstickcam;
                     SaveConfig();
+                }
+
+                if (Keyboard.GetState().IsKeyDown(Keys.F7)) //GamePadSetting
+                {
+                    Console.WriteLine("F6 Pressed");
+                    WaitForKeyUp = true;
+                    UpKey = Keys.F7;
+                    Mode = 6;
+                    Console.WriteLine("Mode: " + Mode);
                 }
             }
             else
@@ -632,6 +711,7 @@ namespace InputRedirectionNTR
             if (Mouse.GetState().LeftButton == ButtonState.Pressed)
             {
                 TouchInput(ref newtouch, ref touchclick, false);
+                Console.WriteLine(newtouch);
             }
             else
             {
@@ -644,7 +724,7 @@ namespace InputRedirectionNTR
                         {
                             newtouch = MacroInput[3];
                         }
-                        else
+                        else //false
                         {
                             newtouch = (uint)Math.Round(2047.5 + (GamePad.GetState(PlayerIndex.One).ThumbSticks.Right.X * 2047.5));
                             newtouch += (uint)Math.Round(2047.5 - (GamePad.GetState(PlayerIndex.One).ThumbSticks.Right.Y * 2047.5)) << 0x0C;
@@ -811,7 +891,7 @@ namespace InputRedirectionNTR
             }
         }
 
-        private void ReadGamePadInput()
+        private void ReadGamePadInput() //First Step, where you press the gamepad button you want to remap Mode3
         {
             if (!WaitForKeyUp)
             {
@@ -930,6 +1010,64 @@ namespace InputRedirectionNTR
             }
         }
 
+        private void ReadGamePadMacro() //First Step, where you press the gamepad button you want to remap for macro Mode 6
+        {
+            Console.WriteLine("Waitkey " + WaitForKeyUp);
+            if (!WaitForKeyUp)
+            {
+                if (GamePad.GetState(PlayerIndex.One).Triggers.Left >= 0.5)
+                {
+                    KeyIndex = 0;
+                    OldMacro = MacroInput[KeyIndex];
+                    MacroInput[KeyIndex] = 0;
+                    Mode = 7;
+                }
+
+                if (GamePad.GetState(PlayerIndex.One).Triggers.Right >=0.5)
+                {
+                    Mode = 7;
+                    KeyIndex = 1;
+                    OldMacro = MacroInput[KeyIndex];
+                    MacroInput[KeyIndex] = 0;
+                }
+
+
+                if (GamePad.GetState(PlayerIndex.One).Buttons.LeftStick == ButtonState.Pressed)
+                {
+                    Mode = 7;
+                    KeyIndex = 2;
+                    OldMacro = MacroInput[KeyIndex];
+                    Console.WriteLine(OldMacro);
+                    MacroInput[KeyIndex] = 0;
+                    
+                }
+
+                if (GamePad.GetState(PlayerIndex.One).Buttons.RightStick == ButtonState.Pressed)
+                {
+                    Mode = 7;
+                    KeyIndex = 3;
+                    OldMacro = MacroInput[KeyIndex];
+                    MacroInput[KeyIndex] = 0;
+                }
+
+                if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+                {
+                    Console.WriteLine("EscMode6");
+                    Mode = 0;
+                    WaitForKeyUp = true;
+                    UpKey = Keys.Escape;
+                    SaveConfig();
+                }
+            }
+            else
+            {
+                if (Keyboard.GetState().IsKeyUp(UpKey))
+                {
+                    WaitForKeyUp = false;
+                }
+            }
+        }
+
         private void ShowMain()
         {
             if (debug)
@@ -1031,27 +1169,47 @@ namespace InputRedirectionNTR
 
         private void ShowMacroMenu()
         {
-            DrawString(68, 28, "Controller : 3DS", Color.White);
-            DrawString(68, 44, "DPad Up    : " + GetButtonNameFromValue(GamePadInput[6]), Color.White);
-            DrawString(68, 52, "DPad Down  : " + GetButtonNameFromValue(GamePadInput[7]), Color.White);
-            DrawString(68, 60, "DPad Left  : " + GetButtonNameFromValue(GamePadInput[5]), Color.White);
-            DrawString(68, 68, "DPad Right : " + GetButtonNameFromValue(GamePadInput[4]), Color.White);
+            spriteBatch.Draw(Background, new Rectangle(0, 0, 320, 240), Color.White);
+            DrawString(50, 28, "Macro Menu", Color.White);
+            DrawString(50, 44, "Left Trigger  : " + MacroInput[0].ToString("X8"), Color.White);
+            DrawString(50, 52, "Right Trigger : " + MacroInput[1].ToString("X8"), Color.White);
+            DrawString(50, 60, "L3            : " + MacroInput[2].ToString("X8"), Color.White);
+            DrawString(50, 68, "R3            : " + MacroInput[3].ToString("X8"), Color.White);
+            DrawString(50, 80, "Press Esc to Back", Color.White);
+        }
 
-            DrawString(68, 84, "Y Axis+    : CPad Up", Color.Gray);
-            DrawString(68, 92, "Y Axis-    : CPad Down", Color.Gray);
-            DrawString(68, 100, "X Axis+    : CPad Left", Color.Gray);
-            DrawString(68, 108, "X Axis-    : CPad Right", Color.Gray);
+        private void ShowTouchScreenPic()
+        {
+            spriteBatch.Draw(Background, new Rectangle(0, 0, 320, 240), Color.White);
+            DrawString(10, 220, "Press Backspace to cancel", Color.White);
+            int mousex = Mouse.GetState().Position.X;
+            int mousey = Mouse.GetState().Position.Y;
+            if (oldtouch == 0x2000000)
+            {
+                if ((GamePad.GetState(PlayerIndex.One).ThumbSticks.Right.X == 0.0) && (GamePad.GetState(PlayerIndex.One).ThumbSticks.Right.Y == 0.0))
+                {
+                    if (MouseInWindow(mousex, mousey))
+                    {
+                        spriteBatch.Draw(Cursor, new Rectangle(mousex - 1, mousey - 1, 3, 3), Color.Red);
+                    }
+                }
+                else
+                {
+                    int stickx = (int)Math.Round(159.5 + (GamePad.GetState(PlayerIndex.One).ThumbSticks.Right.X * 159.5));
+                    int sticky = (int)Math.Round(119.5 - (GamePad.GetState(PlayerIndex.One).ThumbSticks.Right.Y * 119.5));
+                    spriteBatch.Draw(Cursor, new Rectangle(stickx - 1, sticky - 1, 3, 3), Color.Red);
+                }
+            }
+            else
+            {
+                int touchx = (int)Math.Round(((double)(oldtouch & 0xFFF) / 0xFFF) * 319);
+                int touchy = (int)Math.Round(((double)((oldtouch >> 0x0C) & 0xFFF) / 0xFFF) * 239);
+                spriteBatch.Draw(Cursor, new Rectangle(touchx - 1, touchy - 1, 3, 3), Color.Green);
+            }
 
-
-            DrawString(68, 124, "B          : " + GetButtonNameFromValue(GamePadInput[0]), Color.White);
-            DrawString(68, 132, "A          : " + GetButtonNameFromValue(GamePadInput[1]), Color.White);
-            DrawString(68, 140, "X          : " + GetButtonNameFromValue(GamePadInput[11]), Color.White);
-            DrawString(68, 148, "Y          : " + GetButtonNameFromValue(GamePadInput[10]), Color.White);
-
-            DrawString(68, 164, "LB         : " + GetButtonNameFromValue(GamePadInput[9]), Color.White);
-            DrawString(68, 172, "RB         : " + GetButtonNameFromValue(GamePadInput[8]), Color.White);
-            DrawString(68, 180, "Start      : " + GetButtonNameFromValue(GamePadInput[3]), Color.White);
-            DrawString(68, 188, "Back       : " + GetButtonNameFromValue(GamePadInput[2]), Color.White);
+            int cpadx = (int)Math.Round(((double)(oldcpad & 0xFFF) / 0xFFF) * 319);
+            int cpady = (int)Math.Round(239 - (((double)((oldcpad >> 0x0C) & 0xFFF) / 0xFFF) * 239));
+            spriteBatch.Draw(Cursor, new Rectangle(cpadx - 1, cpady - 1, 3, 3), Color.Blue);
         }
 
         private string GetButtonNameFromValue(uint value)
